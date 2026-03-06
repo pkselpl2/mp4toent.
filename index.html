@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>엔트리 동영상 시뮬레이션</title>
+<style>
+  body {
+    background: #f0f0f0;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  #stage {
+    width: 480px;
+    height: 360px;
+    background: #fff;
+    border: 4px solid #333;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  #stage img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  button {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #ff6b81;
+  }
+</style>
+</head>
+<body>
+
+<h1>엔트리 동영상 시뮬레이션</h1>
+<div id="stage"></div>
+<audio id="audio" src="audio.wav"></audio>
+<button id="playBtn">재생</button>
+
+<script>
+const stage = document.getElementById('stage');
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+
+// 프레임 이미지 경로 배열
+const frames = [];
+for (let i = 1; i <= 30; i++) { // 30프레임 예시
+  frames.push(`frames/frame_${String(i).padStart(4,'0')}.png`);
+}
+
+// 이미지 요소 생성
+frames.forEach(src => {
+  const img = document.createElement('img');
+  img.src = src;
+  stage.appendChild(img);
+});
+
+let current = 0;
+let interval;
+
+playBtn.onclick = () => {
+  const imgs = stage.querySelectorAll('img');
+  imgs.forEach(img => img.style.display = 'none');
+  imgs[0].style.display = 'block';
+  current = 0;
+
+  audio.currentTime = 0;
+  audio.play();
+
+  interval = setInterval(() => {
+    imgs[current].style.display = 'none';
+    current++;
+    if(current >= imgs.length) {
+      clearInterval(interval);
+      return;
+    }
+    imgs[current].style.display = 'block';
+  }, 1000/24); // 24fps
+};
+</script>
+
+</body>
+</html>
